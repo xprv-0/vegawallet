@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -30,7 +30,7 @@ func checkVersion(currentVersion string) (*semver.Version, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
