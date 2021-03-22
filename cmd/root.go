@@ -7,6 +7,7 @@ import (
 	"code.vegaprotocol.io/go-wallet/fsutil"
 	"golang.org/x/crypto/ssh/terminal"
 
+	"github.com/blang/semver/v4"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,8 @@ var (
 	rootArgs struct {
 		rootPath string
 	}
+
+	newVersionAvailable *semver.Version
 
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
@@ -30,6 +33,15 @@ func runRoot(cmd *cobra.Command, args []string) error {
 }
 
 func Execute() {
+	v, err := checkVersion(Version)
+	if err != nil {
+		fmt.Printf("could not check vega wallet version updates: %v\n", err)
+	}
+	if v != nil {
+		newVersionAvailable = v
+		fmt.Printf("A new version %v of vega wallet is available, you can download it at %v.\n",
+			newVersionAvailable, vegaWalletReleasesPage)
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Printf("%v\n", err)
 		os.Exit(1)

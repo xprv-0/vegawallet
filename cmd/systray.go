@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"net/http"
 
 	"code.vegaprotocol.io/go-wallet/cmd/icon"
@@ -64,6 +65,18 @@ func newSystrayApp(rootPaths string) (*systrayApp, error) {
 func (a *systrayApp) onReady() {
 	systray.SetIcon(icon.Data)
 
+	updateWallet := systray.AddMenuItem("", "")
+	updateWallet.Hide()
+	if newVersionAvailable != nil {
+		newVersionTitle := fmt.Sprintf("Download version %v", newVersionAvailable)
+		newVersionTooltip := fmt.Sprintf(
+			"Download Vega Wallet version %v", newVersionAvailable)
+		updateWallet.SetTitle(newVersionTitle)
+		updateWallet.SetTooltip(newVersionTooltip)
+		systray.AddSeparator()
+		updateWallet.Show()
+	}
+
 	openConsole := systray.AddMenuItem("Open Console", "Open the Vega Console")
 	editConfig := systray.AddMenuItem("Edit Configuration", "Edit the Vega wallet configuration")
 
@@ -72,6 +85,8 @@ func (a *systrayApp) onReady() {
 
 	for {
 		select {
+		case <-updateWallet.ClickedCh:
+			open.Run(vegaWalletReleasesPage)
 		case <-openConsole.ClickedCh:
 			open.Run(a.cproxy.GetBrowserURL())
 		case <-editConfig.ClickedCh:
