@@ -94,6 +94,10 @@ func (a *systrayApp) onReady() {
 		case <-mQuit.ClickedCh:
 			systray.Quit()
 			return
+		case err := <-a.errChan:
+			a.log.Error("http server failure", zap.Error(err))
+			systray.Quit()
+			return
 		}
 	}
 }
