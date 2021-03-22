@@ -79,6 +79,11 @@ func NewDefaultConfig() Config {
 	}
 }
 
+func ConfigExists(path string) bool {
+	// fsutil.PathExists(rootArgs.rootPath)
+	return true
+}
+
 func LoadConfig(path string) (*Config, error) {
 	buf, err := ioutil.ReadFile(filepath.Join(path, configFile))
 	if err != nil {

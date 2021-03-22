@@ -20,8 +20,14 @@ var (
 		Use:   "vegawallet",
 		Short: "The Vega wallet",
 		Long:  `The Vega wallet`,
+		RunE:  runRoot,
 	}
 )
+
+func runRoot(cmd *cobra.Command, args []string) error {
+	systrayStart(rootArgs.rootPath)
+	return nil
+}
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {

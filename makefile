@@ -27,7 +27,11 @@ release-windows:
 
 release-macos:
 	GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -o build/vegawallet -ldflags "-X code.vegaprotocol.io/go-wallet/cmd.Version=${VERSION} -X code.vegaprotocol.io/go-wallet/cmd.VersionHash=${VERSION_HASH}"
-	cd build && zip vegawallet-darwin-amd64.zip vegawallet
+	# packaging
+	mkdir -p ./build/VegaWallet.app/Contents/MacOS
+	cp ./build/vegawallet ./build/VegaWallet.app/Contents/MacoOS
+	# zipping
+	cd build && zip vegawallet-darwin-amd64.zip VegaWallet.app
 
 release-linux:
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o build/vegawallet -ldflags "-X code.vegaprotocol.io/go-wallet/cmd.Version=${VERSION} -X code.vegaprotocol.io/go-wallet/cmd.VersionHash=${VERSION_HASH}"
