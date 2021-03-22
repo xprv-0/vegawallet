@@ -65,7 +65,7 @@ func (a *systrayApp) onReady() {
 	systray.SetIcon(icon.Data)
 
 	openConsole := systray.AddMenuItem("Open Console", "Open the Vega Console")
-	editConfig := systray.AddMenuItem("Preferences...", "Edit the Vega wallet configuration")
+	editConfig := systray.AddMenuItem("Edit Configuration", "Edit the Vega wallet configuration")
 
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit Vega", "Quit the vega wallet")
@@ -75,6 +75,7 @@ func (a *systrayApp) onReady() {
 		case <-openConsole.ClickedCh:
 			open.Run(a.cproxy.GetBrowserURL())
 		case <-editConfig.ClickedCh:
+			open.Run(rootArgs.rootPath)
 		case <-mQuit.ClickedCh:
 			systray.Quit()
 			return
