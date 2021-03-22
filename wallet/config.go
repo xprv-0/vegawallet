@@ -79,9 +79,16 @@ func NewDefaultConfig() Config {
 	}
 }
 
-func ConfigExists(path string) bool {
-	// fsutil.PathExists(rootArgs.rootPath)
-	return true
+func EnsureConfig(log *zap.Logger, path string) error {
+	// if root folder does not exists, create it
+	if ok, _ := fsutil.PathExists(path); !ok {
+		if err := fsutil.EnsureDir(path); err != nil {
+			return err
+		}
+		return GenConfig(log, path, true, true)
+	}
+
+	return nil
 }
 
 func LoadConfig(path string) (*Config, error) {

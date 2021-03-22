@@ -21,13 +21,8 @@ type systrayApp struct {
 	errChan <-chan error
 }
 
-func newSystrayApp(rootPaths string) (*systrayApp, error) {
+func newSystrayApp(log *zap.Logger, rootPaths string) (*systrayApp, error) {
 	cfg, err := wallet.LoadConfig(rootArgs.rootPath)
-	if err != nil {
-		return nil, err
-	}
-
-	log, err := zap.NewProduction()
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +109,16 @@ func (a *systrayApp) onExit() {
 }
 
 func systrayStart(rootPath string) error {
-	app, err := newSystrayApp(rootPath)
+	log, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
+
+	if err := checkConfig(log, rootPath); err != nil {
+		return err
+	}
+
+	app, err := newSystrayApp(log, rootPath)
 	if err != nil {
 		return err
 	}
@@ -123,6 +127,6 @@ func systrayStart(rootPath string) error {
 	return nil
 }
 
-func checkConfig(rootPath string) error {
-	return nil
+func checkConfig(log *zap.Logger, rootPath string) error {
+	return wallet.EnsureConfig(log, rootPath)
 }
