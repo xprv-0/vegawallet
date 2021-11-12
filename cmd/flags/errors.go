@@ -2,6 +2,7 @@ package flags
 
 import (
 	"fmt"
+	"strings"
 )
 
 type FlagError struct {
@@ -57,5 +58,11 @@ func ParentFlagMustBeSpecifiedError(name string, parent string) error {
 func MustBase64EncodedError(name string) error {
 	return FlagError{
 		message: fmt.Sprintf("--%s flag value must be base64-encoded", name),
+	}
+}
+
+func TooManyArgsError(names ...string) error {
+	return FlagError{
+		message: fmt.Sprintf("too many arguments specified, only expect: %v", strings.Join(names, ", ")),
 	}
 }
